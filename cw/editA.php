@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+div.container {
+    width: 100%;
+    border: 1px solid grey;
+}
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body{
+  background: #f2f2f2;
+  font-family: 'Open Sans', sans-serif;
+padding: 0;
+margin: 0;
+
+}
+table {
+    table-layout: auto;
+    align-items: center;
+    width: 100%;
+    border:1px solid;
+    margin-top:20px;
+    border-collapse: collapse;
+    align-content: center;
+    align-self: auto;
+}
+td {
+    min-width: 250px;
+    border:1px solid;
+    align-content: center;
+    text-align: center;
+}
+header, footer {
+    padding: 1em;
+    color: white;
+    background-color: grey;
+    clear: left;
+    text-align: center;
+}
+nav {
+    float: left;
+    max-width: 200px;
+    margin: 3;
+    padding: lem;
+    font-family:Arial;
+	 font-size: 20px
+	 
+	 
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+   
+nav ul a {
+    text-decoration: none;
+}
+input[type=text] {
+    width: 130px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('searchicon.png');
+    background-position: 10px 10px; 
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+input[type=text]:focus {
+    width: 100%;
+}
+article {
+    margin-left: 100px;
+    border-left: 1px solid gray;
+    padding: 1px;
+    overflow: visible;
+}
+</style>
+<body>
+
+<div class="container">
+
+<header>
+   <h1>Database searcher</h1>
+</header>
+  
+<nav>
+  <ul>
+    <li><a href="Home.php">Home</a></li>
+    <li><a href="Artist.php">Artists</a></li>
+    <li><a href="Album.php">Album</a></li>
+    <li><a href="Tracks.php">Tracks</a></li>
+  </ul>
+</nav>
+		
+<article>
+  <h1>Data-base Metrics</h1>
+
+<html>
+   <head>
+      <title>Edit Record</title>
+   </head>
+   <body>
+
+<?php
+
+
+			include 'config.php';
+			$conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+	//	if(mysqli_connect_errno())
+	//{
+		//	echo "Failed to connect to MySQL: ".mysqli_connect_error();
+		//	die();
+		//}
+
+
+		$artID = ($_GET['id']); 
+		$queryS = "SELECT artName FROM artist WHERE artID = $artID"; 
+		
+		$result = mysqli_query($conn, $queryS);
+
+		//this data is displayed through the loop
+		foreach ($result as $newRow) {
+		$CurrentArtistName = $newRow['artName'];
+		}
+		?>
+
+	<form action="editA.php?id=<?php echo $artID;?>" method = "POST">
+		<b><font color = 'black'>Artist Name</font></b> <br></br>
+		<input type = "text" name = "artistname" value = "<?php echo "";?>">
+		<input type="submit" name = "artForm" value="Save">
+	</form>
+
+	<?php
+			//print_r($_POST);
+		
+			if(isset($_POST['artForm']))
+		{
+			$NewArtistName = $_POST['artistname'];
+			$queryU = "UPDATE Artist SET artName = '$NewArtistName' WHERE artID = $artID;";
+			//echo "$queryU";
+			mysqli_query($conn, $queryU);
+			header("Location:Artist.php");
+		}
+
+		mysqli_close($conn);
+		?>
+		
+					<a href = "Artist.php"><button class = "button"><b>Back to Artists</b></button></a>
+<footer> THE POWER OF &copy; Vasilis Ieropoulos</footer>
+</body>
+</html>
